@@ -69,6 +69,8 @@ class DemoSwiftUsage : NSObject {
 
         mmkv.removeValue(forKey: "bool")
         print("Swift: after delete bool = \(mmkv.bool(forKey: "bool"))")
+
+        MMKV.checkExist(for: "testSwift", mode: MMKVMode.singleProcess)
 	}
 
     @objc func testSwiftAutoExpire() {
