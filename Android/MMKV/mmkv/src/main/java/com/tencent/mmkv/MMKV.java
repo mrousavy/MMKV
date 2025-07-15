@@ -1600,7 +1600,7 @@ public class MMKV implements SharedPreferences, SharedPreferences.Editor {
     @Nullable
     public static NativeBuffer createNativeBuffer(int size) {
         long pointer = createNB(size);
-        if (pointer <= 0) {
+        if (pointer == 0) {
             return null;
         }
         return new NativeBuffer(pointer, size);
