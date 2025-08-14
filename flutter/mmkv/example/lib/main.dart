@@ -36,6 +36,10 @@ void main() async {
   if (Platform.isIOS) {
     final PathProviderFoundation provider = PathProviderFoundation();
     groupDir = await provider.getContainerPath(appGroupIdentifier: "group.tencent.mmkv");
+  } else if (Platform.isMacOS) {
+    final PathProviderFoundation provider = PathProviderFoundation();
+    final path = await provider.getApplicationDocumentsPath();
+    groupDir = "${path}/mmkv_group";
   }
 
   // test NameSpace before MMKV.initialize()
@@ -57,6 +61,13 @@ Future<void> _testNameSpace() async {
 }
 
 void _testMMKVImp(MMKV mmkv, bool decodeOnly) {
+  print('string = ${mmkv.decodeString('string')}');
+
+  String str = "Hello dart from MMKV";
+  if (!decodeOnly) {
+    mmkv.encodeString("string", str);
+  }
+
   if (!decodeOnly) {
     mmkv.encodeBool("bool", true);
   }
@@ -92,11 +103,6 @@ void _testMMKVImp(MMKV mmkv, bool decodeOnly) {
   }
   print('min positive double = ${mmkv.decodeDouble('double')}');
 
-  String str = "Hello dart from MMKV";
-  if (!decodeOnly) {
-    mmkv.encodeString("string", str);
-  }
-  print('string = ${mmkv.decodeString('string')}');
 
   str += " with bytes";
   var bytes = MMBuffer.fromList(Utf8Encoder().convert(str))!;
@@ -458,7 +464,7 @@ class _MyAppState extends State<MyApp> {
       final mmkv = MMKV(mmapID, mode: MMKVMode.MULTI_PROCESS_MODE);
       mmkv.encodeBool("bool", true);
     }
-    var rootDir = Platform.isIOS ? MMKV.groupPath() : null;
+    var rootDir = _isDarwin() ? MMKV.groupPath() : null;
     print("check exist = ${MMKV.checkExist(mmapID, rootDir: rootDir)}");
     MMKV.removeStorage(mmapID, rootDir: rootDir);
     print("after remove, check exist = ${MMKV.checkExist(mmapID, rootDir: rootDir)}");
@@ -549,4 +555,8 @@ class _MyAppState extends State<MyApp> {
       }
     });
   }
+}
+
+bool _isDarwin() {
+  return Platform.isIOS || Platform.isMacOS;
 }

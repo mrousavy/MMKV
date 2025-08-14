@@ -18,7 +18,11 @@
  * limitations under the License.
  */
 
+#ifdef __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__
 #import <Flutter/Flutter.h>
+#else
+#import <FlutterMacOS/FlutterMacOS.h>
+#endif
 
 @interface MMKVPlugin : NSObject <FlutterPlugin>
 @end

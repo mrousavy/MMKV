@@ -415,7 +415,7 @@ class MMKV {
       final length = lengthPtr.value;
       calloc.free(lengthPtr);
       final result = _buffer2String(ret, length);
-      if (!Platform.isIOS && length > 0) {
+      if (!_isDarwin() && length > 0) {
         calloc.free(ret);
       }
       return result;
@@ -477,7 +477,7 @@ class MMKV {
     if (/*ret != null && */ ret != nullptr) {
       final length = lengthPtr.value;
       calloc.free(lengthPtr);
-      if (Platform.isIOS || length == 0) {
+      if (_isDarwin() || length == 0) {
         return MMBuffer._copyFromPointer(ret, length);
       } else {
         return MMBuffer._fromPointer(ret, length);
@@ -573,7 +573,7 @@ class MMKV {
         if (key != null) {
           keys.add(key);
         }
-        if (!Platform.isIOS) {
+        if (!_isDarwin()) {
           calloc.free(keyPtr);
         }
       }
@@ -820,13 +820,17 @@ class MMKV {
 
   /// return the iOS App Group root path for MMKV multi-process instances
   static String? groupPath() {
-    return Platform.isIOS ? _pointer2String(_groupPath()) : null;
+    return _isDarwin() ? _pointer2String(_groupPath()) : null;
   }
 
   /// check if the multi-process MMKV instance has been modified by other processes
   void checkContentChangedByOuterProcess() {
     _checkContentChanged(_handle);
   }
+}
+
+bool _isDarwin() {
+  return Platform.isIOS || Platform.isMacOS;
 }
 
 void _logRedirect(int logLevel, Pointer<Utf8> file, int line, Pointer<Utf8> funcname, Pointer<Utf8> message) {
