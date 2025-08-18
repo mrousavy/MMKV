@@ -12,6 +12,7 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   errors:
     invalid_annotation_target: ignore
+    avoid_print: ignore
   exclude:
     - "lib/assets.dart"
     - "lib/injection.config.dart"

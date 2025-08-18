@@ -39,7 +39,7 @@ void main() async {
   } else if (Platform.isMacOS) {
     final PathProviderFoundation provider = PathProviderFoundation();
     final path = await provider.getApplicationDocumentsPath();
-    groupDir = "${path}/mmkv_group";
+    groupDir = "$path/mmkv_group";
   }
 
   // test NameSpace before MMKV.initialize()
@@ -49,7 +49,7 @@ void main() async {
   final rootDir = await MMKV.initialize(groupDir: groupDir, handler: MyMMKVHandler());
   print("MMKV for flutter with rootDir = $rootDir");
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 Future<void> _testNameSpace() async {
@@ -61,6 +61,7 @@ Future<void> _testNameSpace() async {
 }
 
 void _testMMKVImp(MMKV mmkv, bool decodeOnly) {
+  print("MMKV mmapID = ${mmkv.mmapID}");
   print('string = ${mmkv.decodeString('string')}');
 
   String str = "Hello dart from MMKV";
@@ -105,13 +106,13 @@ void _testMMKVImp(MMKV mmkv, bool decodeOnly) {
 
 
   str += " with bytes";
-  var bytes = MMBuffer.fromList(Utf8Encoder().convert(str))!;
+  var bytes = MMBuffer.fromList(const Utf8Encoder().convert(str))!;
   if (!decodeOnly) {
     mmkv.encodeBytes("bytes", bytes);
   }
   bytes.destroy();
   bytes = mmkv.decodeBytes("bytes")!;
-  print("bytes = ${Utf8Decoder().convert(bytes.asList()!)}");
+  print("bytes = ${const Utf8Decoder().convert(bytes.asList()!)}");
   bytes.destroy();
 
   print('contains "bool": ${mmkv.containsKey('bool')}');
@@ -158,6 +159,8 @@ class MyMMKVHandler extends MMKVHandler {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -392,7 +395,7 @@ class _MyAppState extends State<MyApp> {
     mmkv.encodeDouble("auto_expire_key_4", 3.0, 1);
     mmkv.encodeString("auto_expire_key_5", "hello auto expire", 1);
     {
-      final bytes = MMBuffer.fromList(Utf8Encoder().convert("hello auto expire"))!;
+      final bytes = MMBuffer.fromList(const Utf8Encoder().convert("hello auto expire"))!;
       mmkv.encodeBytes("auto_expire_key_6", bytes, 1);
       bytes.destroy();
     }

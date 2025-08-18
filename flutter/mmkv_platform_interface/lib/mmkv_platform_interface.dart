@@ -317,6 +317,10 @@ class MMKVPluginPlatform {
     throw UnimplementedError();
   }
 
+  void Function(Pointer) freePtrFunc() {
+    throw UnimplementedError();
+  }
+
   // some platform doesn't publish their path_provider package to pub.dev
   // provide override point for these calls
   Future<String> getApplicationDocumentsPath() async {

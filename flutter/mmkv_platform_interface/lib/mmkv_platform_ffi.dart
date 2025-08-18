@@ -38,14 +38,14 @@ class MMKVPluginPlatformFFI extends MMKVPluginPlatform {
   @override
   Pointer<Void> Function(Pointer<Utf8> mmapID, int, Pointer<Utf8> cryptKey, Pointer<Utf8> rootDir, int expectedCapacity) getMMKVWithIDFunc() {
     return nativeLib()
-        .lookup<NativeFunction<Pointer<Void> Function(Pointer<Utf8>, Uint32, Pointer<Utf8>, Pointer<Utf8>, Uint32)>>("getMMKVWithID")
+        .lookup<NativeFunction<Pointer<Void> Function(Pointer<Utf8>, Uint32, Pointer<Utf8>, Pointer<Utf8>, Uint64)>>("getMMKVWithID")
         .asFunction();
   }
 
   @override
   Pointer<Void> Function(Pointer<Utf8> mmapID, int, Pointer<Utf8> cryptKey, Pointer<Utf8> rootDir, int expectedCapacity, int isNameSpace) getMMKVWithIDFunc2() {
     return nativeLib()
-        .lookup<NativeFunction<Pointer<Void> Function(Pointer<Utf8>, Uint32, Pointer<Utf8>, Pointer<Utf8>, Uint32, Int8)>>("getMMKVWithID2")
+        .lookup<NativeFunction<Pointer<Void> Function(Pointer<Utf8>, Uint32, Pointer<Utf8>, Pointer<Utf8>, Uint64, Int8)>>("getMMKVWithID2")
         .asFunction();
   }
 
@@ -350,5 +350,11 @@ class MMKVPluginPlatformFFI extends MMKVPluginPlatform {
   @override
   int Function(Pointer<Void> handle, Pointer<Void> srcHandle) importFromFunc() {
     return nativeLib().lookup<NativeFunction<Uint64 Function(Pointer<Void>, Pointer<Void>)>>(nativeFuncName("importFrom")).asFunction();
+  }
+
+  @override
+  void Function(Pointer) freePtrFunc() {
+    final ptr = nativeLib().lookup<NativeFunction<Void Function(Pointer)>>(nativeFuncName("freePtr"));
+    return ptr != nullptr ? ptr.asFunction() : calloc.free;
   }
 }

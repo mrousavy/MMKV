@@ -20,7 +20,10 @@ dependencies:
     path: ../mmkv_android
   mmkv_ohos:
 #    '>=2.2.2 <2.3.0'
-      path: ../mmkv_ohos
+    path: ../mmkv_ohos
+  mmkv_win32:
+#    '>=2.2.2 <2.3.0'
+    path: ../mmkv_win32
   mmkv_platform_interface:
 #    '>=2.2.1 <2.3.0'
     path: ../mmkv_platform_interface
@@ -50,3 +53,5 @@ flutter:
         default_package: mmkv_ohos
       macos:
         default_package: mmkv_ios
+      windows:
+        default_package: mmkv_win32
