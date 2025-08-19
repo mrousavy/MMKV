@@ -1,5 +1,5 @@
 name: mmkv_win32
-description: iOS platform implementation of MMKV.
+description: Windows platform implementation of MMKV.
 repository: https://github.com/Tencent/MMKV/tree/master/flutter/mmkv_ios
 version: 2.2.3
 homepage: https://github.com/Tencent/mmkv
@@ -40,7 +40,8 @@ flutter:
     implements: mmkv
     platforms:
       windows:
-        pluginClass: MmkvWin32PluginCApi
-        # pluginClass: MMKVPlugin
+        # we don't really need a pluginClass for Windows, 
+        # just to make the flutter build process happy.
+        pluginClass: MmkvWin32Plugin
         dartPluginClass: MMKVPlatformWin32
         ffiPlugin: true

@@ -2,7 +2,7 @@
  * Tencent is pleased to support the open source community by making
  * MMKV available.
  *
- * Copyright (C) 2020 THL A29 Limited, a Tencent company.
+ * Copyright (C) 2025 THL A29 Limited, a Tencent company.
  * All rights reserved.
  *
  * Licensed under the BSD 3-Clause License (the "License"); you may not use
@@ -38,6 +38,12 @@ using namespace std;
 using LogCallback_t = void (*)(uint32_t level, const char *file, int32_t line, const char *funcname, const char *message);
 LogCallback_t g_logCallback = nullptr;
 
+static void myLogHandler(MMKVLogLevel level, const char *file, int line, const char *function, MMKVLog_t message) {
+    if (g_logCallback) {
+        g_logCallback(level, file, line, function, message.c_str());
+    }
+}
+
 static void myOutputDebugString(MMKVLogLevel level, const char *file, int line, const char *function, const char *format, ...) {
     if (!g_logCallback) {
         return;
@@ -58,12 +64,6 @@ static void myOutputDebugString(MMKVLogLevel level, const char *file, int line, 
     
     va_end(args);
     g_logCallback(level, file, line, function, buffer);
-}
-
-static void myLogHandler(MMKVLogLevel level, const char *file, int line, const char *function, MMKVLog_t message) {
-    if (g_logCallback) {
-        g_logCallback(level, file, line, function, message.c_str());
-    }
 }
 
 extern const char *_getFileName(const char *path);

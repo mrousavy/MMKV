@@ -1,59 +1,68 @@
-#include "mmkv_win32_plugin.h"
+// #include <windows.h>
+// #include <VersionHelpers.h>
 
-// This must be included before many other Windows headers.
-#include <windows.h>
+#include "include/mmkv_win32/mmkv_win32_plugin.h"
 
-// For getPlatformVersion; remove unless needed for your plugin implementation.
-#include <VersionHelpers.h>
+// #include <flutter/plugin_registrar_windows.h>
+// #include <flutter/method_channel.h>
+// #include <flutter/standard_method_codec.h>
+// #include <memory>
+// #include <sstream>
 
-#include <flutter/method_channel.h>
-#include <flutter/plugin_registrar_windows.h>
-#include <flutter/standard_method_codec.h>
+// namespace mmkv_win32 {
 
-#include <memory>
-#include <sstream>
+// class MmkvWin32Plugin : public flutter::Plugin {
+//  public:
+//   static void RegisterWithRegistrar(flutter::PluginRegistrarWindows *registrar) {
+//     auto channel =
+//         std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
+//             registrar->messenger(), "mmkv_win32",
+//             &flutter::StandardMethodCodec::GetInstance());
 
-namespace mmkv_win32 {
+//     auto plugin = std::make_unique<MmkvWin32Plugin>();
 
-// static
-void MmkvWin32Plugin::RegisterWithRegistrar(
-    flutter::PluginRegistrarWindows *registrar) {
-  auto channel =
-      std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-          registrar->messenger(), "mmkv_win32",
-          &flutter::StandardMethodCodec::GetInstance());
+//     channel->SetMethodCallHandler(
+//         [plugin_pointer = plugin.get()](const auto &call, auto result) {
+//           plugin_pointer->HandleMethodCall(call, std::move(result));
+//         });
 
-  auto plugin = std::make_unique<MmkvWin32Plugin>();
+//     registrar->AddPlugin(std::move(plugin));
+//   }
 
-  channel->SetMethodCallHandler(
-      [plugin_pointer = plugin.get()](const auto &call, auto result) {
-        plugin_pointer->HandleMethodCall(call, std::move(result));
-      });
+//   MmkvWin32Plugin() {};
 
-  registrar->AddPlugin(std::move(plugin));
+//   virtual ~MmkvWin32Plugin() {};
+
+//   // Disallow copy and assign.
+//   MmkvWin32Plugin(const MmkvWin32Plugin&) = delete;
+//   MmkvWin32Plugin& operator=(const MmkvWin32Plugin&) = delete;
+
+//   // Called when a method is called on this plugin's channel from Dart.
+//   void HandleMethodCall(
+//       const flutter::MethodCall<flutter::EncodableValue> &method_call,
+//       std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
+//           if (method_call.method_name().compare("getPlatformVersion") == 0) {
+//       std::ostringstream version_stream;
+//       version_stream << "Windows ";
+//       if (IsWindows10OrGreater()) {
+//         version_stream << "10+";
+//       } else if (IsWindows8OrGreater()) {
+//         version_stream << "8";
+//       } else if (IsWindows7OrGreater()) {
+//         version_stream << "7";
+//       }
+//       result->Success(flutter::EncodableValue(version_stream.str()));
+//     } else {
+//       result->NotImplemented();
+//     }
+//   }
+// };
+
+// }  // namespace mmkv_win32
+
+void MmkvWin32PluginRegisterWithRegistrar(
+    FlutterDesktopPluginRegistrarRef registrar) {
+  // mmkv_win32::MmkvWin32Plugin::RegisterWithRegistrar(
+  //     flutter::PluginRegistrarManager::GetInstance()
+  //         ->GetRegistrar<flutter::PluginRegistrarWindows>(registrar));
 }
-
-MmkvWin32Plugin::MmkvWin32Plugin() {}
-
-MmkvWin32Plugin::~MmkvWin32Plugin() {}
-
-void MmkvWin32Plugin::HandleMethodCall(
-    const flutter::MethodCall<flutter::EncodableValue> &method_call,
-    std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-  if (method_call.method_name().compare("getPlatformVersion") == 0) {
-    std::ostringstream version_stream;
-    version_stream << "Windows ";
-    if (IsWindows10OrGreater()) {
-      version_stream << "10+";
-    } else if (IsWindows8OrGreater()) {
-      version_stream << "8";
-    } else if (IsWindows7OrGreater()) {
-      version_stream << "7";
-    }
-    result->Success(flutter::EncodableValue(version_stream.str()));
-  } else {
-    result->NotImplemented();
-  }
-}
-
-}  // namespace mmkv_win32

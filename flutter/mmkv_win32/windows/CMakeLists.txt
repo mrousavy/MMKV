@@ -12,25 +12,27 @@ project(${PROJECT_NAME} LANGUAGES CXX)
 # versions of CMake.
 cmake_policy(VERSION 3.14...3.25)
 
-message(STATUS "Current source directory: ${CMAKE_CURRENT_SOURCE_DIR}")
-add_subdirectory(../../../../../../../../../Core Core)
+# Set the version of MMKV to use. This should match the version used in the
+# mmkv_flutter plugin.
+set(MMKV_VERSION "v2.2.2")
+
+include(FetchContent)
+FetchContent_Declare(mmkv
+  GIT_REPOSITORY "https://github.com/Tencent/MMKV.git"
+  GIT_TAG ${MMKV_VERSION}
+  SOURCE_SUBDIR "Core"
+)
+FetchContent_MakeAvailable(mmkv)
 
 # This value is used when generating builds using this plugin, so it must
 # not be changed
-set(PLUGIN_NAME "mmkv_win32_plugin")
-
-# Any new source files that you add to the plugin should be added here.
-list(APPEND PLUGIN_SOURCES
-  "mmkv_win32_plugin.cpp"
-  "mmkv_win32_plugin.h"
-)
+set(PLUGIN_NAME ${PROJECT_NAME}_plugin)
 
 # Define the plugin library target. Its name must not be changed (see comment
 # on PLUGIN_NAME above).
 add_library(${PLUGIN_NAME} SHARED
-  "mmkv_win32_plugin_c_api.cpp"
+  "mmkv_win32_plugin.cpp"
   "flutter-bridge.cpp"
-  ${PLUGIN_SOURCES}
 )
 
 # Apply a standard set of build settings that are configured in the
@@ -42,14 +44,21 @@ add_library(${PLUGIN_NAME} SHARED
 # between plugins. This should not be removed; any symbols that should be
 # exported should be explicitly exported with the FLUTTER_PLUGIN_EXPORT macro.
 set_target_properties(${PLUGIN_NAME} PROPERTIES
-  CXX_VISIBILITY_PRESET hidden)
+  CXX_STANDARD 20
+  CXX_EXTENSIONS OFF
+  POSITION_INDEPENDENT_CODE ON
+  CXX_VISIBILITY_PRESET hidden
+)
+
 target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
 
 # Source include directories and library dependencies. Add any plugin-specific
 # dependencies here.
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
-target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin
+target_link_libraries(${PLUGIN_NAME} PRIVATE
+#  flutter
+ flutter_wrapper_plugin
  core
 )
 
@@ -60,4 +69,3 @@ set(mmkv_win32_bundled_libraries
   ""
   PARENT_SCOPE
 )
-
