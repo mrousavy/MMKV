@@ -252,4 +252,25 @@ task buildAndPublishRepo(type: Copy, dependsOn: ['build', 'publish']) {
     }
 }
 
+//tasks.register('closeCentralRepository', Exec) {
+//    // This task will only run if the 'centralUsername' property exists
+////    onlyIf { project.hasProperty('centralUsername') && project.hasProperty('centralToken') }
+//
+//    // Define your namespace here
+//    def namespace = "com.tencent" // <-- IMPORTANT: Replace with your actual namespace
+//
+//    group = "publishing"
+//    description = "Closes the repository on the Central Publisher Portal."
+//
+//    commandLine "curl", "-X", "POST",
+//            "-u", "${getRepositoryUsername()}:${getRepositoryPassword()}",
+//            "https://ossrh-staging-api.central.sonatype.com/manual/upload/defaultRepository/${namespace}"
+//}
+//
+//// Find your specific publish task and make it trigger the new task
+//// Replace 'publish' with the actual name of your main publishing task if it's different.
+//tasks.named('publish') {
+//    finalizedBy 'closeCentralRepository'
+//}
+
 apply from: rootProject.file('gradle/check.gradle')
