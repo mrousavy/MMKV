@@ -1,4 +1,7 @@
 # MMKV Platform Interface Change Log
+## v2.2.3 / 2025-08-20
+* Protect from `freePtr()` not found.
+
 ## v2.2.2 / 2025-08-20
 * Add `freePtr()`, mainly for Windows.
 
