@@ -1,4 +1,7 @@
 # MMKV Platform Interface Change Log
+## v2.2.2 / 2025-08-20
+* Add `freePtr()`, mainly for Windows.
+
 ## v2.2.1 / 2025-4-25
 * Add `importFrom()`.
 

@@ -1,4 +1,27 @@
 # MMKV Change Log
+## v2.2.3 / 2025-08-20
+This is a feature release that brings **full desktop support to Flutter**. It also includes key bug fixes and enhancements for Android and other platforms.
+
+### Flutter
+* **Added Full Desktop Support**: MMKV for Flutter now officially supports **Windows**, **macOS**, and **Linux**.
+* **Example App**: The example application has been updated to run on all new desktop platforms.
+
+### Android
+* **Feature**: Added `MMKVHandler.getNativeLogHandler()` to allow native handling of MMKV logs from C++ code, improving performance.
+* **Fix**: Corrected an integer overflow bug where a native memory address exceeding `Long.MAX_VALUE` was misinterpreted as a negative number.
+* **Fix**: Prevented potential memory overflow by ensuring JNI local references are deleted after use. 
+* **Fix**: Fixed an issue where directories for special relative paths were not being created correctly.
+* **Enhancement**: Improved the thread-safety of the callback handler to prevent crashes.
+
+### iOS/macOS
+
+* **Fix**: Resolved a build error on Apple platforms that occurred when the `MMKV_APPLE` flag was not set.
+* **Fix**: Addressed a naming conflict in the Swift implementation.
+
+### Windows
+
+* **Fix**: Corrected character encoding issues in the Win32 demo by converting files to UTF-8.
+
 ## v2.2.2 / 2025-05-08
 This is a hot fix version mainly **for Android/Linux platforms**. It’s highly recommended for v2.2.0~v2.2.1 users.
 ### Changes for All platforms
