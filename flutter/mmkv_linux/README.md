@@ -1,6 +1,6 @@
-# mmkv\_win32
+# mmkv\_linux
 
-The Windows implementation detail of [`MMKV`][1].
+The Linux implementation detail of [`MMKV`][1].
 
 ## Usage
 
