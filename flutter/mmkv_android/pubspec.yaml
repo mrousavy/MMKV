@@ -1,6 +1,6 @@
 name: mmkv_android
 description: Android platform implementation of MMKV.
-repository: https://github.com/Tencent/MMKV/tree/master/flutter/mmkv_ios
+repository: https://github.com/Tencent/MMKV/tree/master/flutter/mmkv_android
 version: 2.2.2
 homepage: https://github.com/Tencent/mmkv
 

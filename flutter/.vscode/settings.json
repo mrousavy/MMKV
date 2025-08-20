@@ -7,5 +7,6 @@
         "type_traits": "cpp",
         "xtr1common": "cpp",
         "xutility": "cpp"
-    }
+    },
+    "cmake.ignoreCMakeListsMissing": true
 }

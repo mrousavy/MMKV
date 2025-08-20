@@ -24,6 +24,9 @@ dependencies:
   mmkv_win32:
 #    '>=2.2.2 <2.3.0'
     path: ../mmkv_win32
+  mmkv_linux:
+#    '>=2.2.2 <2.3.0'
+    path: ../mmkv_linux
   mmkv_platform_interface:
 #    '>=2.2.1 <2.3.0'
     path: ../mmkv_platform_interface
@@ -55,3 +58,5 @@ flutter:
         default_package: mmkv_ios
       windows:
         default_package: mmkv_win32
+      linux:
+        default_package: mmkv_linux
