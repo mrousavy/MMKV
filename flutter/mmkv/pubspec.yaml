@@ -14,7 +14,7 @@ dependencies:
   ffi: ^2.0.0
   mmkv_ios:
    '>=2.2.3 <2.3.0'
-    # path: ../mmkv_ios
+#     path: ../mmkv_ios
   mmkv_android:
     '>=2.2.3 <2.3.0'
 #    path: ../mmkv_android
@@ -28,7 +28,7 @@ dependencies:
     '>=2.2.3 <2.3.0'
 #    path: ../mmkv_linux
   mmkv_platform_interface:
-    '>=2.2.2 <2.3.0'
+    '>=2.2.3 <2.3.0'
 #    path: ../mmkv_platform_interface
 
 dev_dependencies:

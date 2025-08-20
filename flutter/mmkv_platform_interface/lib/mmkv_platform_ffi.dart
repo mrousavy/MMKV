@@ -354,7 +354,10 @@ class MMKVPluginPlatformFFI extends MMKVPluginPlatform {
 
   @override
   void Function(Pointer) freePtrFunc() {
-    final ptr = nativeLib().lookup<NativeFunction<Void Function(Pointer)>>(nativeFuncName("freePtr"));
-    return ptr != nullptr ? ptr.asFunction() : calloc.free;
+    try {
+      return nativeLib().lookup<NativeFunction<Void Function(Pointer)>>(nativeFuncName("freePtr")).asFunction();
+    } catch (e) {
+      return calloc.free;
+    }
   }
 }
