@@ -1,4 +1,7 @@
 # MMKV Platform OHOS Change Log
+## v2.2.3 / 2025-08-20
+Keep up with native lib v2.2.3.
+
 ## v2.2.2 / 2025-05-08
 Keep up with native lib v2.2.2.
 

@@ -53,4 +53,11 @@ public interface MMKVHandler {
      * @param message The content of this log.
      */
     void mmkvLog(MMKVLogLevel level, String file, int line, String function, String message);
+
+    /**
+     * handle the log in NDK native code
+     * @return a native log handler with signature of void log(int level, const char *file, int line, const char *function, const char *message)
+     * return 0 to indicate no native handler
+     */
+    long getNativeLogHandler();
 }

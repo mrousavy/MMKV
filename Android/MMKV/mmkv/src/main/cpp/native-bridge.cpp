@@ -48,6 +48,10 @@ extern MMKVLogLevel g_currentLogLevel;
 
 namespace mmkv {
     static void mmkvLog(MMKVLogLevel level, const char *file, int line, const char *function, const std::string &message);
+
+    typedef void (*AndroidLogHandler)(MMKVLogLevel level, const char *file, int line, const char *function, const char *message);
+    static AndroidLogHandler g_androidLogHandler = nullptr;
+    static void androidLogWrapper(MMKVLogLevel level, const char *file, int line, const char *function, const std::string &message);
 }
 
 #define InternalLogError(format, ...) \
@@ -127,30 +131,33 @@ namespace mmkv {
 
 static string jstring2string(JNIEnv *env, jstring str);
 
-MMKV_JNI void jniInitialize(JNIEnv *env, jobject obj, jstring rootDir, jstring cacheDir, jint logLevel) {
+MMKVRecoverStrategic onMMKVError(const std::string &mmapID, MMKVErrorType errorType);
+
+MMKV_JNI void jniInitialize(JNIEnv *env, jobject obj, jstring rootDir, jstring cacheDir, jint logLevel, jboolean logReDirecting, jboolean hasCallback, jlong nativeLogHandler) {
     if (!rootDir) {
         return;
     }
     const char *kstr = env->GetStringUTFChars(rootDir, nullptr);
     if (kstr) {
-        MMKV::initializeMMKV(kstr, (MMKVLogLevel) logLevel);
-        env->ReleaseStringUTFChars(rootDir, kstr);
-
-        g_android_tmpDir = jstring2string(env, cacheDir);
-    }
-}
-
-MMKV_JNI void jniInitialize_2(JNIEnv *env, jobject obj, jstring rootDir, jstring cacheDir, jint logLevel, jboolean logReDirecting) {
-    if (!rootDir) {
-        return;
-    }
-    const char *kstr = env->GetStringUTFChars(rootDir, nullptr);
-    if (kstr) {
-        auto logHandler = logReDirecting ? mmkvLog : nullptr;
+        mmkv::LogHandler logHandler = nullptr;
+        if (logReDirecting) {
+            if (nativeLogHandler != 0) {
+                g_androidLogHandler = (AndroidLogHandler) nativeLogHandler;
+                logHandler = androidLogWrapper;
+            } else {
+                logHandler = mmkvLog;
+            }
+        }
         MMKV::initializeMMKV(kstr, (MMKVLogLevel) logLevel, logHandler);
         env->ReleaseStringUTFChars(rootDir, kstr);
 
         g_android_tmpDir = jstring2string(env, cacheDir);
+
+        if (hasCallback == JNI_TRUE) {
+            MMKV::registerErrorHandler(onMMKVError);
+        } else {
+            MMKV::unRegisterErrorHandler();
+        }
     }
 }
 
@@ -232,6 +239,7 @@ MMKVRecoverStrategic onMMKVError(const std::string &mmapID, MMKVErrorType errorT
     if (currentEnv && methodID) {
         jstring str = string2jstring(currentEnv, mmapID);
         auto strategic = currentEnv->CallStaticIntMethod(g_cls, methodID, str);
+        currentEnv->DeleteLocalRef(str);
         return static_cast<MMKVRecoverStrategic>(strategic);
     }
     return OnErrorDiscard;
@@ -273,8 +281,17 @@ static void mmkvLog(MMKVLogLevel level, const char *file, int line, const char *
         jstring oFunction = string2jstring(currentEnv, string(function));
         jstring oMessage = string2jstring(currentEnv, message);
         int readLevel = level;
+
         currentEnv->CallStaticVoidMethod(g_cls, g_mmkvLogID, readLevel, oFile, line, oFunction, oMessage);
+
+        currentEnv->DeleteLocalRef(oMessage);
+        currentEnv->DeleteLocalRef(oFunction);
+        currentEnv->DeleteLocalRef(oFile);
     }
+}
+
+static void androidLogWrapper(MMKVLogLevel level, const char *file, int line, const char *function, const std::string &message) {
+    g_androidLogHandler(level, file, line, function, message.c_str());
 }
 
 static void onContentChangedByOuterProcess(const std::string &mmapID) {
@@ -282,6 +299,7 @@ static void onContentChangedByOuterProcess(const std::string &mmapID) {
     if (currentEnv && g_callbackOnContentChange) {
         jstring str = string2jstring(currentEnv, mmapID);
         currentEnv->CallStaticVoidMethod(g_cls, g_callbackOnContentChange, str);
+        currentEnv->DeleteLocalRef(str);
     }
 }
 
@@ -908,10 +926,16 @@ MMKV_JNI void setLogLevel(JNIEnv *env, jclass type, jint level) {
     MMKV::setLogLevel((MMKVLogLevel) level);
 }
 
-MMKV_JNI void setCallbackHandler(JNIEnv *env, jclass type, jboolean logReDirecting, jboolean hasCallback) {
+MMKV_JNI void setCallbackHandler(JNIEnv *env, jclass type, jboolean logReDirecting, jboolean hasCallback, jlong nativeHandler) {
     if (logReDirecting == JNI_TRUE) {
-        MMKV::registerLogHandler(mmkvLog);
+        if (nativeHandler != 0) {
+            g_androidLogHandler = (AndroidLogHandler) nativeHandler;
+            MMKV::registerLogHandler(androidLogWrapper);
+        } else {
+            MMKV::registerLogHandler(mmkvLog);
+        }
     } else {
+        g_androidLogHandler = nullptr;
         MMKV::unRegisterLogHandler();
     }
 
@@ -1148,8 +1172,7 @@ static JNINativeMethod g_methods[] = {
     {"removeStorage", "(Ljava/lang/String;Ljava/lang/String;)Z", (void *) mmkv::removeStorage},
     {"ashmemFD", "()I", (void *) mmkv::ashmemFD},
     {"ashmemMetaFD", "()I", (void *) mmkv::ashmemMetaFD},
-    //{"jniInitialize", "(Ljava/lang/String;Ljava/lang/String;I)V", (void *) mmkv::jniInitialize},
-    {"jniInitialize", "(Ljava/lang/String;Ljava/lang/String;IZ)V", (void *) mmkv::jniInitialize_2},
+    {"jniInitialize", "(Ljava/lang/String;Ljava/lang/String;IZZJ)V", (void *) mmkv::jniInitialize},
     {"getMMKVWithID", "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;J)J", (void *) mmkv::getMMKVWithID},
     {"getMMKVWithIDAndSize", "(Ljava/lang/String;IILjava/lang/String;)J", (void *) mmkv::getMMKVWithIDAndSize},
     {"getDefaultMMKV", "(ILjava/lang/String;)J", (void *) mmkv::getDefaultMMKV},
@@ -1185,7 +1208,7 @@ static JNINativeMethod g_methods[] = {
     {"removeValueForKey", "(JLjava/lang/String;)V", (void *) mmkv::removeValueForKey},
     {"valueSize", "(JLjava/lang/String;Z)I", (void *) mmkv::valueSize},
     {"setLogLevel", "(I)V", (void *) mmkv::setLogLevel},
-    {"setCallbackHandler", "(ZZ)V", (void *) mmkv::setCallbackHandler},
+    {"setCallbackHandler", "(ZZJ)V", (void *) mmkv::setCallbackHandler},
     {"createNB", "(I)J", (void *) mmkv::createNB},
     {"destroyNB", "(JI)V", (void *) mmkv::destroyNB},
     {"writeValueToNB", "(JLjava/lang/String;JI)I", (void *) mmkv::writeValueToNB},

@@ -1,7 +1,7 @@
 name: mmkv_ios
 description: iOS platform implementation of MMKV.
 repository: https://github.com/Tencent/MMKV/tree/master/flutter/mmkv_ios
-version: 2.2.2
+version: 2.2.3
 homepage: https://github.com/Tencent/mmkv
 
 environment:
@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   ffi: ^2.0.0
   mmkv_platform_interface:
-    '>=2.2.1 <2.3.0'
+    '>=2.2.2 <2.3.0'
 #    path: ../mmkv_platform_interface
 
 dev_dependencies:
@@ -37,3 +37,8 @@ flutter:
       ios:
         pluginClass: MMKVPlugin
         dartPluginClass: MMKVPlatformIOS
+        sharedDarwinSource: true
+      macos:
+        pluginClass: MMKVPlugin
+        dartPluginClass: MMKVPlatformIOS
+        sharedDarwinSource: true

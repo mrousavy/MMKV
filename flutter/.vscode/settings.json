@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "xstring": "cpp",
+        "xlocale": "cpp",
+        "algorithm": "cpp",
+        "functional": "cpp",
+        "type_traits": "cpp",
+        "xtr1common": "cpp",
+        "xutility": "cpp"
+    },
+    "cmake.ignoreCMakeListsMissing": true
+}

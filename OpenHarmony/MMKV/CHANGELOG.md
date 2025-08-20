@@ -1,4 +1,7 @@
 # MMKV for HarmonyOS NEXT Change Log
+## v2.2.3 / 2025-08-20
+* Keep up with Core library v2.2.3.
+
 ## v2.2.2 / 2025-05-08
 This is a hot fix version mainly **for Android/Linux platforms**. It’s highly recommended for v2.2.0~v2.2.1 users.
 * Improve file lock consistency for Mayfly FD MMKV instances.

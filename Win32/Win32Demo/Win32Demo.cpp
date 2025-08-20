@@ -1,4 +1,4 @@
-/*
+О╩©/*
  * Tencent is pleased to support the open source community by making
  * MMKV available.
  *
@@ -90,7 +90,7 @@ void functionalTest(MMKV *mmkv, bool decodeOnly) {
     cout << "double = " << mmkv->getDouble("double") << endl;
     if (!decodeOnly) {
 
-        mmkv->set("Hello, MMKV-н╒пе for Win32", "string");
+        mmkv->set("Hello, MMKV-Е╬╝Д©║ for Win32", "string");
     }
     string result;
     mmkv->getString("string", result);
@@ -323,7 +323,7 @@ void testAutoExpire() {
 void testExpectedCapacity() {
     int len = 10000;
     std::string value(len, '0');
-    value = "©©?©©©_" + value;
+    value = "Е╝╧И┤▐" + value;
     cout << "value length = " << value.size() << endl;
     std::string key = "key";
     // if you know exactly the sizes of key and value, set expectedCapacity for performance improvement
@@ -422,7 +422,7 @@ void testReadOnly() {
 }
 
 void testNameSpace() {
-    wstring rootDir = getAppDataRoaming(L"Tencent", L"н╒пе-mmkv_namespace");
+    wstring rootDir = getAppDataRoaming(L"Tencent", L"Е╬╝Д©║-mmkv_namespace");
     auto ns = MMKV::nameSpace(rootDir);
     auto kv = ns.mmkvWithID("test_namespace");
     functionalTest(kv, false);
@@ -491,7 +491,7 @@ int main() {
     // test NameSpace before initializeMMKV()
     testNameSpace();
 
-    wstring rootDir = getAppDataRoaming(L"Tencent", L"н╒пе-MMKV");
+    wstring rootDir = getAppDataRoaming(L"Tencent", L"Е╬╝Д©║-MMKV");
     MMKV::initializeMMKV(rootDir, MMKVLogInfo, LogHandler);
     //MMKV::setLogLevel(MMKVLogNone);
     //MMKV::registerLogHandler(LogHandler);

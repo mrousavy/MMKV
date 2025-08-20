@@ -418,8 +418,8 @@ class MMKV;
 + (BOOL)removeStorage:(NSString *)mmapID mode:(MMKVMode)mode NS_SWIFT_NAME(removeStorage(for:mode:));
 
 /// detect if the MMKV file exist or not
-+ (BOOL)checkExist:(NSString *)mmapID rootPath:(nullable NSString *)path NS_SWIFT_NAME(removeStorage(for:rootPath:));
-+ (BOOL)checkExist:(NSString *)mmapID mode:(MMKVMode)mode NS_SWIFT_NAME(removeStorage(for:mode:));
++ (BOOL)checkExist:(NSString *)mmapID rootPath:(nullable NSString *)path NS_SWIFT_NAME(checkExist(for:rootPath:));
++ (BOOL)checkExist:(NSString *)mmapID mode:(MMKVMode)mode NS_SWIFT_NAME(checkExist(for:mode:));
 
 // protection from potential misuse
 + (void)initialize NS_UNAVAILABLE;

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Tencent is pleased to support the open source community by making
  * MMKV available.
  *
@@ -72,7 +72,7 @@ int main() {
     wcout.imbue(locale(""));
     srand(GetTickCount());
 
-    wstring rootDir = getAppDataRoaming(L"Tencent", L"΢��-MMKV");
+    wstring rootDir = getAppDataRoaming(L"Tencent", L"微信-MMKV");
     MMKV::initializeMMKV(rootDir);
 
     auto processID = GetCurrentProcessId();

@@ -51,6 +51,11 @@ class MMBuffer {
   /// The pointer of underlying memory buffer.
   Pointer<Uint8>? get pointer => _ptr;
 
+  bool _isFromNative = false;
+
+  /// Whether this buffer is from native side.
+  bool get isFromNative => _isFromNative;
+
   /// Create a memory buffer with size of [length].
   MMBuffer(int length) {
     _length = length;
@@ -77,10 +82,11 @@ class MMBuffer {
 
   /// Create a wrapper of native pointer [ptr] with size [length].
   /// DON'T [destroy()] the result because it's not a copy.
-  static MMBuffer _fromPointer(Pointer<Uint8> ptr, int length) {
+  static MMBuffer _fromPointer(Pointer<Uint8> ptr, int length, {bool fromNative = true}) {
     final buffer = MMBuffer(0);
     buffer._length = length;
     buffer._ptr = ptr;
+    buffer._isFromNative = fromNative;
     return buffer;
   }
 
@@ -99,7 +105,12 @@ class MMBuffer {
   /// Must call this after no longer use.
   void destroy() {
     if (_ptr != null && _ptr != nullptr) {
-      malloc.free(_ptr!);
+      if (_isFromNative) {
+        _isFromNative = false;
+        _freePtr(_ptr!);
+      } else {
+        malloc.free(_ptr!);
+      }
     }
     _ptr = null;
     _length = 0;
@@ -204,7 +215,7 @@ class MMKV {
 
     if (rootDir == null) {
       final path = await _mmkvPlatform.getApplicationDocumentsPath();
-      rootDir = "${path}/mmkv";
+      rootDir = Platform.isWindows ? "$path\\mmkv" : "$path/mmkv";
     }
     _rootDir = rootDir;
 
@@ -415,8 +426,8 @@ class MMKV {
       final length = lengthPtr.value;
       calloc.free(lengthPtr);
       final result = _buffer2String(ret, length);
-      if (!Platform.isIOS && length > 0) {
-        calloc.free(ret);
+      if (!_isDarwin() && length > 0) {
+        _freePtr(ret);
       }
       return result;
     }
@@ -477,7 +488,7 @@ class MMKV {
     if (/*ret != null && */ ret != nullptr) {
       final length = lengthPtr.value;
       calloc.free(lengthPtr);
-      if (Platform.isIOS || length == 0) {
+      if (_isDarwin() || length == 0) {
         return MMBuffer._copyFromPointer(ret, length);
       } else {
         return MMBuffer._fromPointer(ret, length);
@@ -513,7 +524,7 @@ class MMKV {
       final length = lengthPtr.value;
       calloc.free(lengthPtr);
       final result = _buffer2String(ret, length);
-      calloc.free(ret);
+      _freePtr(ret);
       return result;
     }
     return null;
@@ -573,12 +584,12 @@ class MMKV {
         if (key != null) {
           keys.add(key);
         }
-        if (!Platform.isIOS) {
-          calloc.free(keyPtr);
+        if (!_isDarwin()) {
+          _freePtr(keyPtr);
         }
       }
-      calloc.free(keyArray);
-      calloc.free(sizeArray);
+      _freePtr(keyArray);
+      _freePtr(sizeArray);
     }
 
     calloc.free(sizeArrayPtr);
@@ -820,13 +831,17 @@ class MMKV {
 
   /// return the iOS App Group root path for MMKV multi-process instances
   static String? groupPath() {
-    return Platform.isIOS ? _pointer2String(_groupPath()) : null;
+    return _isDarwin() ? _pointer2String(_groupPath()) : null;
   }
 
   /// check if the multi-process MMKV instance has been modified by other processes
   void checkContentChangedByOuterProcess() {
     _checkContentChanged(_handle);
   }
+}
+
+bool _isDarwin() {
+  return Platform.isIOS || Platform.isMacOS;
 }
 
 void _logRedirect(int logLevel, Pointer<Utf8> file, int line, Pointer<Utf8> funcname, Pointer<Utf8> message) {
@@ -1033,3 +1048,5 @@ final int Function(Pointer<Utf8> mmapID, Pointer<Utf8> rootPath) _isFileValid = 
 final Pointer<Utf8> Function() _groupPath = _mmkvPlatform.groupPathFunc();
 
 final int Function(Pointer<Void>, Pointer<Void>) _importFrom = _mmkvPlatform.importFromFunc();
+
+final void Function(Pointer) _freePtr = _mmkvPlatform.freePtrFunc();

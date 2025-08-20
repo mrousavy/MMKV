@@ -1,6 +1,6 @@
 [![license](https://img.shields.io/badge/license-BSD_3-brightgreen.svg?style=flat)](https://github.com/Tencent/MMKV/blob/master/LICENSE.TXT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Tencent/MMKV/pulls)
-[![Release Version](https://img.shields.io/badge/release-2.2.2-brightgreen.svg)](https://github.com/Tencent/MMKV/releases)
+[![Release Version](https://img.shields.io/badge/release-2.2.3-brightgreen.svg)](https://github.com/Tencent/MMKV/releases)
 [![Platform](https://img.shields.io/badge/Platform-%20Android%20%7C%20iOS%2FmacOS%20%7C%20Windows%20%7C%20POSIX%20%7C%20HarmonyOS%20NEXT-brightgreen.svg)](https://github.com/Tencent/MMKV/wiki/home)
 
 中文版本请参看[这里](./README_CN.md)
@@ -28,8 +28,8 @@ Add the following lines to `build.gradle` on your app module:
 
 ```gradle
 dependencies {
-    implementation 'com.tencent:mmkv:2.2.2'
-    // replace "2.2.2" with any available version
+    implementation 'com.tencent:mmkv:2.2.3'
+    // replace "2.2.3" with any available version
 }
 ```
 
@@ -345,7 +345,8 @@ Check out the [CHANGELOG.md](./CHANGELOG.md) for details of change history.
 
 ## Contributing
 
-If you are interested in contributing, check out the [CONTRIBUTING.md](./CONTRIBUTING.md), also join our [Tencent OpenSource Plan](https://opensource.tencent.com/contribution).
+If you are interested in contributing, check out the [CONTRIBUTING.md](./CONTRIBUTING.md), also join our [Tencent OpenSource Plan](https://opensource.tencent.com/contribution). MMKV has officially joined the [Tencent Device-oriented Service Product Alliance](https://tds-union.qq.com/), working together with other alliance members to build an open and mutually beneficial frontend technology product ecosystem.
+
 
 To give clarity of what is expected of our members, MMKV has adopted the code of conduct defined by the Contributor Covenant, which is widely used. And we think it articulates our values well. For more, check out the [Code of Conduct](./CODE_OF_CONDUCT.md).
 

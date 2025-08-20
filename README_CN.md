@@ -22,8 +22,8 @@ MMKV 是基于 mmap 内存映射的 key-value 组件，底层序列化/反序列
 
 ```gradle
 dependencies {
-    implementation 'com.tencent:mmkv:2.2.2'
-    // replace "2.2.2" with any available version
+    implementation 'com.tencent:mmkv:2.2.3'
+    // replace "2.2.3" with any available version
 }
 ```
 从 v2.0.0 起, MMKV **去掉了 32-bit 架构的支持**、API level 22 及以下的支持, 如有这类需求，请使用 v1.3.x LTS 版本。  
@@ -290,6 +290,7 @@ MMKV 以 BSD 3-Clause 证书开源，详情参见 [LICENSE.TXT](./LICENSE.TXT)�
 ## 参与贡献
 如果你有兴趣参与贡献，可以参考 [CONTRIBUTING.md](./CONTRIBUTING.md)。
 [腾讯开源激励计划](https://opensource.tencent.com/contribution) 鼓励开发者的参与和贡献，期待你的加入。
+MMKV 正式加入[TDS 腾讯端服务产品联盟](https://tds-union.qq.com/)，携手联盟其他成员，共同致力于构建开放共赢的大前端技术产品生态。
 
 为了明确我们对参与者的期望，MMKV 采用了被广泛使用的、由 Contributor Covenant 所定义的行为准则。我们认为它很好地阐明了我们的价值观。有关更多信息请查看 [Code of Conduct](./CODE_OF_CONDUCT.md)。
 

@@ -81,7 +81,7 @@ MMKV_EXPORT void mmkvInitialize(const char *rootDir, int32_t logLevel) {
     mmkvInitialize_v2(rootDir, nullptr, 0, logLevel, nullptr);
 }
 
-MMKV_EXPORT void *getMMKVWithID(const char *mmapID, int32_t mode, const char *cryptKey, const char *rootPath, size_t expectedCapacity) {
+MMKV_EXPORT void *getMMKVWithID2(const char *mmapID, int32_t mode, const char *cryptKey, const char *rootPath, size_t expectedCapacity, bool fromNameSpace) {
     MMKV *kv = nullptr;
     if (!mmapID) {
         return kv;
@@ -91,10 +91,15 @@ MMKV_EXPORT void *getMMKVWithID(const char *mmapID, int32_t mode, const char *cr
     bool done = false;
     if (cryptKey) {
         string crypt = cryptKey;
-        if (crypt.length() > 0) {
+        if (!crypt.empty()) {
             if (rootPath) {
                 string path = rootPath;
-                kv = MMKV::mmkvWithID(str, DEFAULT_MMAP_SIZE, (MMKVMode) mode, &crypt, &path, expectedCapacity);
+                if (fromNameSpace) {
+                    auto ns = MMKV::nameSpace(path);
+                    kv = ns.mmkvWithID(str, DEFAULT_MMAP_SIZE, (MMKVMode) mode, &crypt, expectedCapacity);
+                } else {
+                    kv = MMKV::mmkvWithID(str, DEFAULT_MMAP_SIZE, (MMKVMode) mode, &crypt, &path, expectedCapacity);
+                }
             } else {
                 kv = MMKV::mmkvWithID(str, DEFAULT_MMAP_SIZE, (MMKVMode) mode, &crypt, nullptr, expectedCapacity);
             }
@@ -104,7 +109,12 @@ MMKV_EXPORT void *getMMKVWithID(const char *mmapID, int32_t mode, const char *cr
     if (!done) {
         if (rootPath) {
             string path = rootPath;
-            kv = MMKV::mmkvWithID(str, DEFAULT_MMAP_SIZE, (MMKVMode) mode, nullptr, &path, expectedCapacity);
+            if (fromNameSpace) {
+                auto ns = MMKV::nameSpace(path);
+                kv = ns.mmkvWithID(str, DEFAULT_MMAP_SIZE, (MMKVMode) mode, nullptr, expectedCapacity);
+            } else {
+                kv = MMKV::mmkvWithID(str, DEFAULT_MMAP_SIZE, (MMKVMode) mode, nullptr, &path, expectedCapacity);
+            }
         } else {
             kv = MMKV::mmkvWithID(str, DEFAULT_MMAP_SIZE, (MMKVMode) mode, nullptr, nullptr, expectedCapacity);
         }
@@ -113,8 +123,8 @@ MMKV_EXPORT void *getMMKVWithID(const char *mmapID, int32_t mode, const char *cr
     return kv;
 }
 
-MMKV_EXPORT void *getMMKVWithID2(const char *mmapID, int32_t mode, const char *cryptKey, const char *rootPath, size_t expectedCapacity, bool fromNameSpace) {
-    return getMMKVWithID(mmapID, mode, cryptKey, rootPath, expectedCapacity);
+MMKV_EXPORT void *getMMKVWithID(const char *mmapID, int32_t mode, const char *cryptKey, const char *rootPath, size_t expectedCapacity) {
+    return getMMKVWithID2(mmapID, mode, cryptKey, rootPath, expectedCapacity, false);
 }
 
 MMKV_EXPORT void *getDefaultMMKV(int32_t mode, const char *cryptKey) {
