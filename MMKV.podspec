@@ -31,6 +31,7 @@ Pod::Spec.new do |s|
     "CLANG_CXX_LANGUAGE_STANDARD" => "gnu++20",
     "CLANG_CXX_LIBRARY" => "libc++",
     "CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF" => "NO",
+    "DEFINES_MODULE" => "YES",
   }
 
   s.dependency 'MMKVCore', '~> 2.2.3'
